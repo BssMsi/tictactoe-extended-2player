@@ -29,15 +29,15 @@ class TicTacToe:
 
         # Draw Board
         self.sub_frame = []
-        for row in range(1, 4):
-            for col in range(3):
+        for row in xrange(1, 4):
+            for col in xrange(3):
                 self.sub_frame.append(Frame(self.main_frame, width=screen_width / 3, height=screen_height / 3,
                                             highlightbackground='black', highlightthickness=2))
                 self.sub_frame[-1].grid(row=row, column=col)
         # # Draw Buttons
         self.buttons = dict()
-        for i in range(9):
-            for j in range(9):
+        for i in xrange(9):
+            for j in xrange(9):
                 self.buttons[str(i) + str(j)] = Button(self.sub_frame[i], width=screen_width / 81,
                                                        height=screen_height / 155, cursor='tcross',
                                                        command=lambda no=i, x=j: self.move(no, x), text=".")
@@ -54,25 +54,25 @@ class TicTacToe:
         if frame_no in self.conq:
             for i in xrange(9):
                 if i in self.conq:
-                    for j in range(9):
+                    for j in xrange(9):
                         self.buttons[str(i) + str(j)].configure(state=DISABLED, cursor='pirate')
                     self.sub_frame[i].configure(highlightbackground='black')
 
                 else:
-                    for j in range(9):
+                    for j in xrange(9):
                         self.buttons[str(i) + str(j)].configure(state=NORMAL,
                                                                 cursor=('tcross', 'circle')[self.player == 'X'])
                     self.sub_frame[i].configure(highlightbackground='red')
         else:
-            for i in range(9):
+            for i in xrange(9):
                 if i == frame_no and i not in self.conq:
-                    for j in range(9):
+                    for j in xrange(9):
                         self.buttons[str(i) + str(j)].configure(state=NORMAL,
                                                                 cursor=('tcross', 'circle')[self.player == 'X'])
                     self.sub_frame[i].configure(highlightbackground='red')
 
                 else:
-                    for j in range(9):
+                    for j in xrange(9):
                         self.buttons[str(i)+str(j)].configure(state=DISABLED, cursor='pirate')
                     self.sub_frame[i].configure(highlightbackground='black')
 
@@ -80,12 +80,12 @@ class TicTacToe:
         i = str(i)
         for wins in self.win:
             if self.board_status[i + wins[0]] + self.board_status[i + wins[1]] + self.board_status[i + wins[2]] == 3:
-                for j in range(9):
+                for j in xrange(9):
                     self.buttons[i + str(j)].configure(text=self.player, state=DISABLED)
                 self.conq.append(int(i))
                 break
             elif self.board_status[i + wins[0]] + self.board_status[i + wins[1]] + self.board_status[i + wins[2]] == -3:
-                for j in range(9):
+                for j in xrange(9):
                     self.buttons[i + str(j)].configure(text=self.player, state=DISABLED)
                 self.conq.append(int(i))
                 break
