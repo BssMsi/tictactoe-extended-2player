@@ -1,4 +1,4 @@
-from Tkinter import *
+from Tkinter import Tk, Frame, Label, Button, RAISED, NORMAL, DISABLED, N, S, W, E, Toplevel
 
 
 class TicTacToe:
@@ -16,12 +16,12 @@ class TicTacToe:
     def draw(self):
         screen_width, screen_height = self.root.winfo_screenwidth(), self.root.winfo_screenheight()
 
-        self.main_frame = Frame(self.root, width=screen_width, height=screen_height, relief=SUNKEN)
+        self.main_frame = Frame(self.root, width=screen_width, height=screen_height)
         self.main_frame.grid(row=0, column=0)
 
         header = Frame(self.main_frame, width=screen_width, relief=RAISED)
         header.grid(row=0, columnspan=3)
-        Label(header, text='EXTENDED TIC-TAC-TOE', font=("arial", 20, "bold")).grid(row=0)
+        Label(header, text='EXTENDED TIC-TAC-TOE', font=("times", 25, "bold")).grid(row=0)
 
         self.conq = []
         self.player = "X"
@@ -38,8 +38,8 @@ class TicTacToe:
         self.buttons = dict()
         for i in xrange(9):
             for j in xrange(9):
-                self.buttons[str(i) + str(j)] = Button(self.sub_frame[i], width=screen_width / 81,
-                                                       height=screen_height / 155, cursor='tcross',
+                self.buttons[str(i) + str(j)] = Button(self.sub_frame[i],  width=screen_width / 100,
+                                                       height=screen_height / 255, cursor='tcross', font=40,
                                                        command=lambda no=i, x=j: self.move(no, x), text=".")
                 self.buttons[str(i) + str(j)].grid(row=j / 3, column=j % 3)
                 self.board_status[str(i) + str(j)] = 0
@@ -50,7 +50,7 @@ class TicTacToe:
         self.turn = Label(footer, text='Player' + self.player+' plays first', font=('times', 20, 'italic'))
         self.turn.grid(row=0)
 
-    def act(self, frame_no):
+    def shift_focus(self, frame_no):
         if frame_no in self.conq:
             for i in xrange(9):
                 if i in self.conq:
@@ -61,14 +61,14 @@ class TicTacToe:
                 else:
                     for j in xrange(9):
                         self.buttons[str(i) + str(j)].configure(state=NORMAL,
-                                                                cursor=('tcross', 'circle')[self.player == 'X'])
+                                                                cursor=('circle', 'tcross')[self.player == 'X'])
                     self.sub_frame[i].configure(highlightbackground='red')
         else:
             for i in xrange(9):
                 if i == frame_no and i not in self.conq:
                     for j in xrange(9):
                         self.buttons[str(i) + str(j)].configure(state=NORMAL,
-                                                                cursor=('tcross', 'circle')[self.player == 'X'])
+                                                                cursor=('circle', 'tcross')[self.player == 'X'])
                     self.sub_frame[i].configure(highlightbackground='red')
 
                 else:
@@ -96,23 +96,21 @@ class TicTacToe:
         for wins in self.win:
             flag = True
             for t in wins:
-                print wins, self.conq
                 if int(t) not in self.conq:
                     flag = False
                     break
             if flag is True:
                 break
         if flag is True:
-            self.main_frame.destroy()
-            self.over_frame = Frame(self.root)
+            t = Toplevel(self.root)
+            self.over_frame = Frame(t)
             self.over_frame.grid(row=0)
             Label(self.over_frame, text=self.player+' Wins').grid(row=0)
             Button(self.over_frame, text='New game', command=self.draw).grid(row=1)
 
     def move(self, i, j):
         self.buttons[str(i)+str(j)].configure(text=self.player)
-        # Shift focus to corresponding cell
-        self.act(j)
+
         if self.player == "X":
             self.board_status[str(i) + str(j)] = 1
             self.check_small(i)
@@ -121,7 +119,10 @@ class TicTacToe:
             self.board_status[str(i) + str(j)] = -1
             self.check_small(i)
             self.player = "X"
-        self.turn.configure(text='Player ' + self.player + ' turn')
+
+        # Shift focus to corresponding cell
+        self.shift_focus(j)
+        self.turn.configure(text='Player  ' + self.player + ' turn')
 
 
 run = TicTacToe()
